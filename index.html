@@ -6,114 +6,225 @@
     <title>Jhaswin Arjun Suresh — Senior AI/ML/MLOps Engineer</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root{
+        :root {
+            /* Light Theme Variables */
             --bg: #f7f9fb;
             --card: #ffffff;
+            --text-main: #0f172a;
             --muted: #6b7280;
-            --accent-1: #2b8cff; /* blue */
-            --accent-2: #8358ff; /* violet */
+            --accent-1: #2b8cff;
+            --accent-2: #8358ff;
             --glass: rgba(43,140,255,0.06);
+            --border: rgba(15,23,42,0.06);
             --radius: 14px;
             --maxw: 1200px;
-            --shadow-lg: 0 10px 30px rgba(20,30,60,0.08);
-            --shadow-sm: 0 6px 18px rgba(20,30,60,0.06);
+            --shadow-lg: 0 20px 40px rgba(20,30,60,0.08);
+            --shadow-sm: 0 6px 18px rgba(20,30,60,0.04);
+            --nav-bg: rgba(255,255,255,0.8);
         }
-        *{box-sizing:border-box}
-        html,body{height:100%}
-        body{
-            margin:0;
-            font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
-            background:var(--bg);
-            color:#0f172a;
-            -webkit-font-smoothing:antialiased;
-            -moz-osx-font-smoothing:grayscale;
-            line-height:1.5;
+
+        [data-theme="dark"] {
+            /* Dark Theme Variables */
+            --bg: #0b1120;
+            --card: #1e293b;
+            --text-main: #f8fafc;
+            --muted: #94a3b8;
+            --accent-1: #3b82f6;
+            --accent-2: #a855f7;
+            --glass: rgba(59,130,246,0.1);
+            --border: rgba(255,255,255,0.08);
+            --shadow-lg: 0 20px 40px rgba(0,0,0,0.4);
+            --shadow-sm: 0 6px 18px rgba(0,0,0,0.3);
+            --nav-bg: rgba(11,17,32,0.8);
         }
-        .container{max-width:var(--maxw);margin:0 auto;padding:0 24px}
-        nav{position:sticky;top:0;background:linear-gradient(180deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));backdrop-filter:blur(6px);border-bottom:1px solid rgba(15,23,42,0.04);z-index:30}
-        .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:18px 0}
-        .logo{font-weight:800;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent;font-size:18px}
-        nav ul{display:flex;gap:20px;list-style:none;margin:0}
-        nav a{color:var(--muted);text-decoration:none;font-weight:600;font-size:14px}
-        nav a:hover{color:var(--accent-1)}
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0;
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            transition: background-color 0.4s ease, color 0.4s ease;
+            overflow-x: hidden;
+        }
+
+        /* Mouse Glow */
+        #glow {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(131,88,255,0.15) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Scroll Progress */
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+            width: 0%;
+            z-index: 100;
+        }
+
+        .container { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+        
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-bg);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            z-index: 50;
+            transition: background 0.4s ease;
+        }
+        .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; }
+        .logo { font-weight: 800; background: linear-gradient(90deg, var(--accent-1), var(--accent-2)); -webkit-background-clip: text; color: transparent; font-size: 20px; letter-spacing: -0.5px; }
+        nav ul { display: flex; gap: 24px; list-style: none; margin: 0; align-items: center; }
+        nav a { color: var(--muted); text-decoration: none; font-weight: 600; font-size: 14px; transition: color 0.2s; }
+        nav a:hover { color: var(--accent-1); }
+        
+        .theme-toggle {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .theme-toggle:hover { transform: scale(1.05); }
+
+        /* Reveal Animation Class */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
 
         /* HERO */
-        .hero{padding:60px 0 40px;display:grid;grid-template-columns:1fr 360px;gap:40px;align-items:center}
-        .hero-card{background:linear-gradient(180deg, #ffffff, #fbfbff);border-radius:var(--radius);padding:36px;box-shadow:var(--shadow-lg);border:1px solid rgba(15,23,42,0.03)}
-        .hero h1{font-size:28px;margin:0 0 8px}
-        .subtitle{font-weight:600;color:var(--muted);margin-bottom:18px}
-        .hero p{color:var(--muted);margin-bottom:22px}
-        .cta{display:flex;gap:12px;flex-wrap:wrap}
-        .btn{padding:12px 20px;border-radius:10px;font-weight:700;border:none;cursor:pointer}
-        .btn-primary{background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:white;box-shadow:0 8px 24px rgba(131,88,255,0.14)}
-        .btn-ghost{background:transparent;border:1px solid rgba(15,23,42,0.06);color:var(--muted)}
-        .hero-meta{display:flex;gap:16px;margin-top:18px}
-        .meta-item{background:var(--glass);padding:10px 12px;border-radius:10px;font-weight:700;color:var(--accent-1);display:inline-flex;align-items:center;gap:8px}
+        .hero { padding: 80px 0 60px; display: grid; grid-template-columns: 1fr 360px; gap: 40px; align-items: center; }
+        .hero-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 40px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease, box-shadow 0.3s ease;
+        }
+        .hero h1 { font-size: 32px; margin: 0 0 12px; line-height: 1.2; letter-spacing: -0.5px; }
+        .subtitle { font-weight: 600; color: var(--muted); margin-bottom: 20px; font-size: 18px; }
+        .hero p { color: var(--muted); margin-bottom: 26px; font-size: 15px; }
+        
+        .cta { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 24px; }
+        .btn { padding: 12px 24px; border-radius: 10px; font-weight: 700; border: none; cursor: pointer; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; display: inline-block; }
+        .btn:hover { transform: translateY(-2px); }
+        .btn-primary { background: linear-gradient(90deg, var(--accent-1), var(--accent-2)); color: white; box-shadow: 0 8px 20px rgba(131,88,255,0.25); }
+        .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
+        
+        .hero-meta { display: flex; gap: 12px; flex-wrap: wrap; }
+        .meta-item { background: var(--glass); padding: 8px 14px; border-radius: 8px; font-weight: 700; color: var(--accent-1); font-size: 13px; border: 1px solid var(--border); }
 
-        /* typing subtitle */
-        .typing{font-weight:700;color:var(--accent-2);display:inline-block}
-        .cursor{display:inline-block;width:2px;height:20px;background:var(--accent-2);margin-left:6px;vertical-align:middle;animation:blink 1s steps(2,end) infinite}
-        @keyframes blink{50%{opacity:0}}
+        .typing-area { font-weight: 700; color: var(--accent-2); display: inline-block; font-size: 16px; margin-bottom: 20px; min-height: 24px; }
+        .cursor { display: inline-block; width: 2px; height: 18px; background: var(--accent-2); margin-left: 4px; vertical-align: middle; animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
 
-        /* hero aside */
-        .highlights{display:flex;flex-direction:column;gap:12px}
-        .highlight-card{background:linear-gradient(90deg,#fff,#fbfbff);border-radius:12px;padding:14px;border:1px solid rgba(15,23,42,0.04);box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:8px}
-        .highlight-card h4{margin:0;font-size:13px;color:var(--muted)}
-        .highlight-card strong{font-size:16px;color:#0f172a}
+        .highlights { display: flex; flex-direction: column; gap: 16px; }
+        .highlight-card { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid var(--border); box-shadow: var(--shadow-sm); transition: transform 0.3s ease; }
+        .highlight-card:hover { transform: translateX(-5px); border-color: var(--accent-1); }
+        .highlight-card h4 { margin: 0 0 8px 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
+        .highlight-card strong { font-size: 15px; color: var(--text-main); display: block; }
 
         /* ABOUT */
-        section{padding:64px 0}
-        .section-title{font-size:20px;text-align:center;margin-bottom:28px;font-weight:800}
-        .about-grid{display:grid;grid-template-columns:1fr 340px;gap:28px;align-items:start}
-        .about-card{background:var(--card);padding:26px;border-radius:12px;box-shadow:var(--shadow-sm);border:1px solid rgba(15,23,42,0.03)}
-        .about p{color:var(--muted);margin-bottom:12px}
-        .badges{display:flex;flex-direction:column;gap:12px}
-        .badge{background:linear-gradient(90deg,rgba(43,140,255,0.08),rgba(131,88,255,0.06));padding:12px;border-radius:10px;border:1px solid rgba(43,140,255,0.08);display:flex;justify-content:space-between;align-items:center}
-        .badge strong{color:#0f172a}
+        section { padding: 80px 0; }
+        .section-title { font-size: 28px; text-align: center; margin-bottom: 40px; font-weight: 800; background: linear-gradient(90deg, var(--accent-1), var(--accent-2)); -webkit-background-clip: text; color: transparent; }
+        .about-grid { display: grid; grid-template-columns: 1fr 340px; gap: 32px; align-items: start; }
+        .about-card { background: var(--card); padding: 32px; border-radius: 16px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); transition: transform 0.3s; }
+        .about-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+        .about p { color: var(--muted); margin-bottom: 16px; font-size: 15px; }
+        
+        .badges { display: flex; flex-direction: column; gap: 12px; }
+        .badge { background: var(--glass); padding: 14px 18px; border-radius: 10px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; transition: all 0.2s; }
+        .badge:hover { background: var(--accent-1); color: white; transform: scale(1.02); }
+        .badge:hover span, .badge:hover strong { color: white; }
+        .badge span { font-size: 13px; color: var(--muted); }
+        .badge strong { font-size: 14px; color: var(--text-main); }
 
         /* SKILLS */
-        .skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-        .skill-tier{border-radius:12px;padding:18px;background:var(--card);border:1px solid rgba(15,23,42,0.03);box-shadow:var(--shadow-sm);overflow:hidden}
-        .skill-tier h3{margin:0 0 10px}
-        .skill-tags{display:flex;flex-wrap:wrap;gap:8px}
-        .chip{padding:8px 10px;border-radius:999px;background:rgba(15,23,42,0.04);font-weight:600;font-size:13px;color:#0f172a}
-        .progress{margin-top:12px}
-        .bar{height:10px;background:rgba(15,23,42,0.06);border-radius:999px;overflow:hidden}
-        .bar > span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));width:0;transition:width 1200ms cubic-bezier(.2,.9,.3,1)}
-        .tier-desc{color:var(--muted);font-size:13px;margin-top:10px}
+        .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
+        .skill-tier { background: var(--card); border-radius: 16px; padding: 24px; border: 1px solid var(--border); box-shadow: var(--shadow-sm); transition: transform 0.3s; }
+        .skill-tier:hover { transform: translateY(-5px); border-color: var(--accent-2); }
+        .skill-tier h3 { margin: 0 0 16px; font-size: 18px; display: flex; align-items: center; gap: 8px; }
+        .skill-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+        .chip { padding: 6px 12px; border-radius: 20px; background: var(--glass); border: 1px solid var(--border); font-weight: 600; font-size: 12px; color: var(--text-main); transition: all 0.2s; cursor: default; }
+        .chip:hover { background: var(--accent-1); color: white; transform: scale(1.05); }
+        .progress { margin-top: 20px; }
+        .bar-bg { height: 8px; background: var(--border); border-radius: 10px; overflow: hidden; margin-top: 8px; }
+        .bar-fill { display: block; height: 100%; border-radius: 10px; background: linear-gradient(90deg, var(--accent-1), var(--accent-2)); width: 0; transition: width 1.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .tier-desc { color: var(--muted); font-size: 13px; margin-top: 16px; line-height: 1.5; }
 
-        /* Projects: keep markup intact but wrap in light background */
-        #projects{background:transparent}
+        /* PROJECTS */
+        .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+        .project-card { background: var(--card); border-radius: 16px; border: 1px solid var(--border); box-shadow: var(--shadow-sm); overflow: hidden; transition: all 0.3s ease; display: flex; flex-direction: column; }
+        .project-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); border-color: var(--accent-1); }
+        .project-content { padding: 24px; display: flex; flex-direction: column; flex-grow: 1; }
+        .project-content h3 { margin: 0 0 12px; font-size: 18px; color: var(--text-main); }
+        .project-content p { color: var(--muted); font-size: 14px; margin-bottom: 20px; flex-grow: 1; }
+        .project-tech { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+        .tech-tag { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: rgba(131,88,255,0.1); color: var(--accent-2); }
+        .project-link { display: inline-flex; align-items: center; font-weight: 700; font-size: 14px; color: var(--accent-1); text-decoration: none; transition: gap 0.2s; gap: 4px; }
+        .project-link:hover { gap: 8px; }
 
-        /* EXPERIENCE */
-        .timeline{display:flex;flex-direction:column;gap:18px}
-        .exp-item{background:var(--card);border-radius:12px;padding:18px;border:1px solid rgba(15,23,42,0.03);box-shadow:var(--shadow-sm);opacity:0;transform:translateY(14px);transition:all 700ms cubic-bezier(.2,.9,.3,1)}
-        .exp-item.show{opacity:1;transform:translateY(0)}
-        .exp-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-        .company{color:var(--accent-2);font-weight:700}
-        .date{color:var(--muted);font-weight:600}
-        .exp-item ul{margin-top:10px;color:var(--muted);padding-left:18px}
+        /* EXPERIENCE & EDUCATION */
+        .timeline { display: flex; flex-direction: column; gap: 24px; border-left: 2px solid var(--border); padding-left: 24px; margin-left: 12px; }
+        .exp-item { background: var(--card); border-radius: 16px; padding: 24px; border: 1px solid var(--border); box-shadow: var(--shadow-sm); position: relative; transition: all 0.3s; }
+        .exp-item:hover { transform: translateX(8px); border-color: var(--accent-1); }
+        .exp-item::before { content: ''; position: absolute; left: -33px; top: 28px; width: 14px; height: 14px; background: var(--bg); border: 2px solid var(--accent-1); border-radius: 50%; z-index: 2; transition: background 0.3s; }
+        .exp-item:hover::before { background: var(--accent-1); box-shadow: 0 0 10px var(--accent-1); }
+        .exp-head { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; }
+        .company { color: var(--accent-2); font-weight: 700; font-size: 15px; margin-top: 4px; }
+        .date { color: var(--muted); font-weight: 600; font-size: 13px; background: var(--glass); padding: 4px 10px; border-radius: 6px; }
+        .exp-item ul { margin-top: 16px; color: var(--muted); padding-left: 18px; font-size: 14px; }
+        .exp-item li { margin-bottom: 8px; }
+        .exp-item li::marker { color: var(--accent-1); }
 
-        /* CONTACT & FOOTER */
-        .contact-grid{display:flex;gap:18px;align-items:center;justify-content:space-between}
-        .contact-card{background:linear-gradient(90deg,#fff,#fbfbff);padding:18px;border-radius:12px;border:1px solid rgba(15,23,42,0.03);box-shadow:var(--shadow-sm)}
-        footer{padding:30px 0;text-align:center;color:var(--muted);font-size:13px}
+        /* CONTACT */
+        .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; text-align: center; }
+        .contact-card { background: var(--card); padding: 30px 20px; border-radius: 16px; border: 1px solid var(--border); box-shadow: var(--shadow-sm); transition: transform 0.3s, box-shadow 0.3s; }
+        .contact-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); border-color: var(--accent-2); }
+        .contact-card h4 { margin: 0 0 12px; color: var(--text-main); font-size: 16px; }
+        .contact-card a { color: var(--accent-1); text-decoration: none; font-weight: 600; font-size: 15px; }
+        .contact-card a:hover { text-decoration: underline; }
 
-        /* responsive */
-        @media (max-width:1000px){
-            .hero{grid-template-columns:1fr 300px}
-            .about-grid{grid-template-columns:1fr}
-            .skills-grid{grid-template-columns:1fr}
+        footer { padding: 40px 0; text-align: center; color: var(--muted); font-size: 14px; border-top: 1px solid var(--border); margin-top: 40px; }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .hero { grid-template-columns: 1fr; }
+            .about-grid { grid-template-columns: 1fr; }
+            .exp-head { flex-direction: column; }
         }
-        @media (max-width:640px){
-            nav ul{display:none}
-            .hero{grid-template-columns:1fr}
-            .hero-card{padding:20px}
-            .hero h1{font-size:22px}
+        @media (max-width: 600px) {
+            nav ul { display: none; }
+            .hero-card { padding: 24px; }
+            .hero h1 { font-size: 26px; }
+            .timeline { padding-left: 16px; border-left-width: 1px; }
+            .exp-item::before { left: -24px; width: 10px; height: 10px; top: 26px; }
         }
     </style>
 </head>
 <body>
+    <div id="progress-bar"></div>
+    <div id="glow"></div>
+
     <nav>
         <div class="container nav-inner">
             <div class="logo">Jhaswin Arjun Suresh</div>
@@ -123,19 +234,20 @@
                 <li><a href="#projects">Projects</a></li>
                 <li><a href="#experience">Experience</a></li>
                 <li><a href="#contact">Contact</a></li>
+                <li><button class="theme-toggle" id="theme-btn">🌙 Dark</button></li>
             </ul>
         </div>
     </nav>
 
     <main class="container">
-        <section class="hero">
-            <div class="hero-card">
-                <h1>Senior AI/ML/MLOps Engineer | 9 Years Leading Production ML Systems</h1>
-                <div class="subtitle">Results-driven engineer building production-grade ML systems across healthcare, finance, and enterprise</div>
-                <p>Experienced in deploying large-scale LLM and ML systems on cloud platforms (AWS &amp; Azure). Led teams shipping models serving 50K+ daily active users with sub-500ms latency. Deep expertise in MLOps, LLM integration, and scalable backend infrastructures.</p>
+        <section class="hero reveal" style="padding-top: 60px;">
+            <div class="hero-card" id="tilt-card">
+                <h1>Senior AI/ML/MLOps Engineer [cite: 8]</h1>
+                <div class="subtitle">9 Years Leading Production ML Systems [cite: 8]</div>
+                <p>Results-driven engineer building production-grade ML systems across healthcare, finance, and enterprise[cite: 9]. Experienced in deploying large-scale LLM systems on cloud platforms (AWS & Azure). Led teams shipping models serving 50K+ daily active users with sub-500ms latency[cite: 10, 11].</p>
 
-                <div class="typing-area" style="margin-bottom:12px">
-                    <span class="typing" id="typed"></span><span class="cursor"></span>
+                <div class="typing-area">
+                    <span id="typed"></span><span class="cursor"></span>
                 </div>
 
                 <div class="cta">
@@ -143,425 +255,449 @@
                     <a class="btn btn-ghost" href="#contact">Get In Touch</a>
                 </div>
 
-                <div class="hero-meta" aria-hidden="true">
-                    <div class="meta-item">50K+ DAUs</div>
-                    <div class="meta-item">Sub-500ms Latency</div>
-                    <div class="meta-item">AWS · Azure</div>
+                <div class="hero-meta">
+                    <div class="meta-item">50K+ DAUs [cite: 10]</div>
+                    <div class="meta-item">Sub-500ms Latency [cite: 10]</div>
+                    <div class="meta-item">AWS · Azure [cite: 11]</div>
                 </div>
             </div>
 
-            <aside class="highlights">
+            <aside class="highlights reveal" style="transition-delay: 0.2s;">
                 <div class="highlight-card">
-                    <h4>Summary</h4>
-                    <strong>Senior AI/ML/MLOps Engineer with 9 years of experience leading production ML systems, LLM integrations and scalable cloud architectures.</strong>
+                    <h4>Current Role</h4>
+                    <strong>AI Engineer / AI Analyst <br> Emirates Printing Press, Dubai [cite: 32, 33]</strong>
                 </div>
                 <div class="highlight-card">
-                    <h4>Specialties</h4>
-                    <div style="display:flex;flex-direction:column;gap:6px">
-                        <span style="font-weight:700">LLMs · MLOps · Cloud AI</span>
-                        <small style="color:var(--muted)">LangChain · LangGraph · AWS Bedrock · OpenAI · Claude</small>
+                    <h4>Current Focus</h4>
+                    <span style="font-size: 14px; color: var(--muted);">Gemini integration, RAG pipelines with ChromaDB, and exploring CLARA framework[cite: 34, 35, 36].</span>
+                </div>
+                <div class="highlight-card">
+                    <h4>Core Tech Stack</h4>
+                    <div style="display:flex; flex-direction:column; gap:6px">
+                        <span style="font-weight:700; font-size: 14px; color: var(--text-main);">Python · FastAPI · AWS Bedrock [cite: 14, 16]</span>
+                        <small style="color:var(--muted)">LangChain · LangGraph · OpenAI · Claude [cite: 15, 16]</small>
                     </div>
-                </div>
-                <div class="highlight-card">
-                    <h4>Current</h4>
-                    <strong>Flint International IT Services — Agentic AI & MLOps (Dubai)</strong>
                 </div>
             </aside>
         </section>
 
-        <section id="about">
+        <section id="about" class="reveal">
             <h2 class="section-title">About Me</h2>
             <div class="about-grid">
-                <div class="about-card about">
-                    <p><strong>Senior AI/ML/MLoPS Engineer with 9 Years Experience Leading Production ML Systems.</strong></p>
-                    <p>Results-driven AI/ML Engineer with 8+ years of experience building production-grade machine learning systems across healthcare, finance, and enterprise domains. Led deployment of ML models serving 50K+ daily active users with sub-500ms latency. Expertise in LLMs, MLOps, and scalable AI infrastructure on AWS and Azure.</p>
-                    <p>I focus on bridging research and product — deploying robust LLM agents, building HIPAA-compliant RAG systems, and automating model packaging and CI/CD pipelines for hybrid-cloud deployments.</p>
-                    <p style="margin-top:12px;color:var(--muted)"><strong>Location:</strong> Dubai, UAE • <strong>Open to:</strong> Leadership, MLOps Architecture, LLM Systems</p>
+                <div class="about-card about tilt-effect">
+                    <p><strong>Senior AI/ML/MLOPS Engineer with 9 Years Experience [cite: 8]</strong></p>
+                    <p>I focus on bridging research and product—deploying robust LLM agents, building RAG systems, and automating model packaging and CI/CD pipelines for hybrid-cloud deployments. Recently, I have been spearheading the integration of Agentic AI frameworks[cite: 29].</p>
+                    <p style="margin-top:20px; padding-top: 20px; border-top: 1px solid var(--border);">
+                        <strong>Location:</strong> Dubai, UAE [cite: 5]<br>
+                        <strong>Education:</strong> Bachelor of Engineering in Computer Science, Loyola-ICAM College (7.79 CGPA) 
+                    </p>
                 </div>
 
-                <div class="about-card">
-                    <h3 style="margin-top:0">Key Highlights</h3>
+                <div class="about-card tilt-effect">
+                    <h3 style="margin-top:0; color: var(--text-main);">Impact Metrics</h3>
                     <div class="badges">
-                        <div class="badge"><span>Deployment Scale</span><strong>50K+ daily users</strong></div>
-                        <div class="badge"><span>Latency</span><strong>Sub-500ms production latency</strong></div>
-                        <div class="badge"><span>Compliance</span><strong>HIPAA &amp; FDA alignment</strong></div>
-                        <div class="badge"><span>Agentic AI</span><strong>LangGraph &amp; LangChain</strong></div>
+                        <div class="badge"><span>Scale</span><strong>50K+ daily users [cite: 10]</strong></div>
+                        <div class="badge"><span>Speed</span><strong>Sub-500ms latency [cite: 10]</strong></div>
+                        <div class="badge"><span>Compliance</span><strong>HIPAA & FDA [cite: 61]</strong></div>
+                        <div class="badge"><span>RAG</span><strong>ChromaDB & Pinecone [cite: 17]</strong></div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="skills">
-            <h2 class="section-title">Technical Skills</h2>
+        <section id="skills" class="reveal">
+            <h2 class="section-title">Technical Expertise</h2>
             <div class="skills-grid">
-                <div class="skill-tier" id="primary">
-                    <h3>🟢 Primary Skills (Core Expertise)</h3>
-                    <div class="skill-tags" style="margin-top:8px">
-                        <span class="chip">AWS (SageMaker, Lambda, EC2, S3)</span>
-                        <span class="chip">Azure (ML Studio, Synapse)</span>
-                        <span class="chip">Docker &amp; Kubernetes</span>
-                        <span class="chip">MLflow · CI/CD · GitHub Actions</span>
-                        <span class="chip">Python · FastAPI · Django</span>
-                        <span class="chip">TensorFlow · PyTorch · scikit-learn</span>
-                        <span class="chip">BERT · GPT-4 · Claude · LLaMA</span>
-                        <span class="chip">LangChain · LangGraph · OpenAI API</span>
-                        <span class="chip">AWS Bedrock</span>
+                <div class="skill-tier tilt-effect">
+                    <h3>🟢 Primary (Core Expertise) [cite: 13]</h3>
+                    <div class="skill-tags">
+                        <span class="chip">AWS Ecosystem [cite: 14]</span>
+                        <span class="chip">Docker & K8s [cite: 14]</span>
+                        <span class="chip">Python & FastAPI [cite: 14]</span>
+                        <span class="chip">TensorFlow & PyTorch [cite: 15]</span>
+                        <span class="chip">GPT-4 / Claude / LLaMA [cite: 15]</span>
+                        <span class="chip">LangChain / LangGraph [cite: 16]</span>
                     </div>
                     <div class="progress">
-                        <div style="display:flex;justify-content:space-between;font-weight:700;margin-top:10px"><span>Cloud &amp; MLOps</span><span>95%</span></div>
-                        <div class="bar" style="margin-top:8px"><span data-width="95%"></span></div>
-
-                        <div style="display:flex;justify-content:space-between;font-weight:700;margin-top:10px"><span>LLMs &amp; Frameworks</span><span>92%</span></div>
-                        <div class="bar" style="margin-top:8px"><span data-width="92%"></span></div>
-
-                        <div style="display:flex;justify-content:space-between;font-weight:700;margin-top:10px"><span>Python &amp; Backend</span><span>94%</span></div>
-                        <div class="bar" style="margin-top:8px"><span data-width="94%"></span></div>
+                        <div style="display:flex; justify-content:space-between; font-weight:700; font-size:13px;"><span>Cloud & MLOps</span><span>95%</span></div>
+                        <div class="bar-bg"><span class="bar-fill" data-width="95%"></span></div>
+                        <div style="display:flex; justify-content:space-between; font-weight:700; font-size:13px; margin-top:12px;"><span>LLM Integration</span><span>92%</span></div>
+                        <div class="bar-bg"><span class="bar-fill" data-width="92%"></span></div>
                     </div>
-                    <div class="tier-desc">Deep AWS + Python ecosystem expertise (end-to-end from development to deployment).</div>
+                    <div class="tier-desc">Deep AWS + Python ecosystem expertise. End-to-end deployment of Agentic frameworks[cite: 28, 29].</div>
                 </div>
 
-                <div class="skill-tier" id="secondary">
-                    <h3>🟡 Secondary Skills (Proficient)</h3>
-                    <div class="skill-tags" style="margin-top:8px">
-                        <span class="chip">Azure Synapse · Functions · Cosmos DB</span>
-                        <span class="chip">GCP (Vertex AI, BigQuery)</span>
-                        <span class="chip">Apache Airflow · Spark · Kafka</span>
-                        <span class="chip">Pinecone · ChromaDB · dbt</span>
-                        <span class="chip">React.js · Next.js</span>
-                        <span class="chip">Terraform · Helm · Prefect</span>
-                        <span class="chip">Model Registry · Kubeflow</span>
+                <div class="skill-tier tilt-effect">
+                    <h3>🟡 Secondary (Proficient) [cite: 18]</h3>
+                    <div class="skill-tags">
+                        <span class="chip">Azure & GCP [cite: 19]</span>
+                        <span class="chip">Apache Airflow / Spark [cite: 20]</span>
+                        <span class="chip">Pinecone / ChromaDB [cite: 20]</span>
+                        <span class="chip">React.js & Next.js [cite: 21]</span>
+                        <span class="chip">Terraform & Helm [cite: 22]</span>
                     </div>
                     <div class="progress">
-                        <div style="display:flex;justify-content:space-between;font-weight:700;margin-top:10px"><span>Data Engineering</span><span>86%</span></div>
-                        <div class="bar" style="margin-top:8px"><span data-width="86%"></span></div>
-
-                        <div style="display:flex;justify-content:space-between;font-weight:700;margin-top:10px"><span>DevOps &amp; Automation</span><span>88%</span></div>
-                        <div class="bar" style="margin-top:8px"><span data-width="88%"></span></div>
+                        <div style="display:flex; justify-content:space-between; font-weight:700; font-size:13px;"><span>Data Engineering</span><span>86%</span></div>
+                        <div class="bar-bg"><span class="bar-fill" data-width="86%"></span></div>
+                        <div style="display:flex; justify-content:space-between; font-weight:700; font-size:13px; margin-top:12px;"><span>DevOps & Infrastructure</span><span>88%</span></div>
+                        <div class="bar-bg"><span class="bar-fill" data-width="88%"></span></div>
                     </div>
-                    <div class="tier-desc">Proficient across multi-cloud, data pipelines and infrastructure automation.</div>
+                    <div class="tier-desc">Strong grasp of Cloud Automation, ETL pipelines, and scalable backend systems[cite: 30].</div>
                 </div>
 
-                <div class="skill-tier" id="familiar">
-                    <h3>🔵 Familiar / Working Knowledge</h3>
-                    <div class="skill-tags" style="margin-top:8px">
-                        <span class="chip">PostgreSQL · MySQL · MongoDB</span>
-                        <span class="chip">Power BI · Tableau · matplotlib</span>
-                        <span class="chip">R · SQL · Java · TypeScript</span>
-                        <span class="chip">spaCy · NLTK · Azure OpenAI</span>
-                        <span class="chip">ONNX · TorchScript · Model Packaging</span>
+                <div class="skill-tier tilt-effect">
+                    <h3>🔵 Familiar Knowledge [cite: 23]</h3>
+                    <div class="skill-tags">
+                        <span class="chip">PostgreSQL / MongoDB [cite: 24]</span>
+                        <span class="chip">Power BI / Tableau [cite: 25]</span>
+                        <span class="chip">R / SQL / TypeScript [cite: 25]</span>
+                        <span class="chip">Azure OpenAI [cite: 26]</span>
+                        <span class="chip">ONNX / TorchScript [cite: 58]</span>
                     </div>
                     <div class="progress">
-                        <div style="display:flex;justify-content:space-between;font-weight:700;margin-top:10px"><span>Databases &amp; Viz</span><span>75%</span></div>
-                        <div class="bar" style="margin-top:8px"><span data-width="75%"></span></div>
+                        <div style="display:flex; justify-content:space-between; font-weight:700; font-size:13px;"><span>Databases & Viz</span><span>75%</span></div>
+                        <div class="bar-bg"><span class="bar-fill" data-width="75%"></span></div>
+                    </div>
+                    <div class="tier-desc">Working knowledge of diverse databases, reporting tools, and traditional machine learning optimization.</div>
+                </div>
+            </div>
+        </section>
 
-                        <div style="display:flex;justify-content:space-between;font-weight:700;margin-top:10px"><span>Model Packaging</span><span>78%</span></div>
-                        <div class="bar" style="margin-top:8px"><span data-width="78%"></span></div>
+        <section id="projects" class="reveal">
+            <h2 class="section-title">Featured Projects [cite: 90]</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-content">
+                        <h3>LangGraph Multi-Agent API [cite: 91]</h3>
+                        <p>Built a production-ready multi-agent reasoning system with stateful graph execution, reducing complex problem-solving time by 60%[cite: 93].</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">FastAPI</span><span class="tech-tag">LangGraph</span><span class="tech-tag">Docker [cite: 92]</span>
+                        </div>
+                        <a href="#" class="project-link">View Details →</a>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-content">
+                        <h3>Real-Time Fraud Detection [cite: 95]</h3>
+                        <p>Engineered a streaming fraud detection system processing 50K+ transactions daily with 94% accuracy and sub-100ms latency[cite: 97].</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Kafka</span><span class="tech-tag">ML</span><span class="tech-tag">FastAPI [cite: 96]</span>
+                        </div>
+                        <a href="#" class="project-link">View Details →</a>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-content">
+                        <h3>Multi-Modal RAG System [cite: 104]</h3>
+                        <p>Developed hybrid search combining text and image retrieval. Improved search relevance by 45% using multi-modal embeddings[cite: 106].</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">OpenAI</span><span class="tech-tag">CLIP</span><span class="tech-tag">Vector Search [cite: 105]</span>
+                        </div>
+                        <a href="#" class="project-link">View Details →</a>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-content">
+                        <h3>Document Q&A Enterprise Search [cite: 133]</h3>
+                        <p>Built enterprise document search with contextual Q&A. Reduced document search time by 70% and improved answer relevance by 55%[cite: 135].</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">LangChain</span><span class="tech-tag">Elasticsearch</span><span class="tech-tag">RAG [cite: 134]</span>
+                        </div>
+                        <a href="#" class="project-link">View Details →</a>
+                    </div>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-content">
+                        <h3>Voice-to-Text Summary Service [cite: 117]</h3>
+                        <p>End-to-end transcription pipeline. Achieved 95% accuracy across 12 languages with automated insight generation[cite: 119].</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Whisper</span><span class="tech-tag">LLM</span><span class="tech-tag">Audio Processing [cite: 118]</span>
+                        </div>
+                        <a href="#" class="project-link">View Details →</a>
+                    </div>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-content">
+                        <h3>Time-Series Anomaly Detection [cite: 108]</h3>
+                        <p>Built hybrid ML system detecting anomalies with 92% precision. Deployed for 20+ enterprise clients monitoring critical metrics[cite: 110, 111].</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Prophet</span><span class="tech-tag">LSTM</span><span class="tech-tag">TensorFlow [cite: 109]</span>
+                        </div>
+                        <a href="#" class="project-link">View Details →</a>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Projects section intentionally left unchanged as requested -->
-        <section id="projects" style="background: rgba(43,140,255,0.02);">
-            <div class="container">
-                <h2 class="section-title">Featured Projects</h2>
-                <div class="projects-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px">
-                    <div class="project-card">
-                        <div class="project-content">
-                            <h3>LangGraph Multi-Agent Reasoning API</h3>
-                            <p>Production-ready multi-agent reasoning system with stateful graph execution. Reduced complex problem-solving time by 60% through autonomous agent collaboration.</p>
-                            <div class="project-tech">
-                                <span class="tech-tag">FastAPI</span>
-                                <span class="tech-tag">LangGraph</span>
-                                <span class="tech-tag">SQL</span>
-                                <span class="tech-tag">Docker</span>
-                            </div>
-                            <a href="https://github.com/JhaswinArjunSuresh?tab=repositories" class="project-link">View on GitHub →</a>
-                        </div>
-                    </div>
-
-                    <div class="project-card">
-                        <div class="project-content">
-                            <h3>Real-Time Fraud Detection API</h3>
-                            <p>Engineered streaming fraud detection system processing 50K+ transactions daily. Achieved 94% accuracy with sub-100ms latency and automated alert triggering.</p>
-                            <div class="project-tech">
-                                <span class="tech-tag">Apache Kafka</span>
-                                <span class="tech-tag">ML</span>
-                                <span class="tech-tag">FastAPI</span>
-                                <span class="tech-tag">Docker</span>
-                            </div>
-                            <a href="https://github.com/JhaswinArjunSuresh?tab=repositories" class="project-link">View on GitHub →</a>
-                        </div>
-                    </div>
-
-                    <div class="project-card">
-                        <div class="project-content">
-                            <h3>Multi-Modal RAG System</h3>
-                            <p>Hybrid search system combining text and image retrieval. Improved search relevance by 45% using retrieval-augmented generation with multi-modal embeddings.</p>
-                            <div class="project-tech">
-                                <span class="tech-tag">OpenAI</span>
-                                <span class="tech-tag">CLIP</span>
-                                <span class="tech-tag">Vector Search</span>
-                                <span class="tech-tag">FastAPI</span>
-                            </div>
-                            <a href="https://github.com/JhaswinArjunSuresh?tab=repositories" class="project-link">View on GitHub →</a>
-                        </div>
-                    </div>
-
-                    <div class="project-card">
-                        <div class="project-content">
-                            <h3>Generative Agents in Virtual World</h3>
-                            <p>Created autonomous agents with persistent memory and natural dialogue capabilities in simulated environment. Achieved 89% realistic interaction score.</p>
-                            <div class="project-tech">
-                                <span class="tech-tag">Python</span>
-                                <span class="tech-tag">Simulation</span>
-                                <span class="tech-tag">Memory Systems</span>
-                                <span class="tech-tag">AI</span>
-                            </div>
-                            <a href="https://github.com/JhaswinArjunSuresh?tab=repositories" class="project-link">View on GitHub →</a>
-                        </div>
-                    </div>
-
-                    <div class="project-card">
-                        <div class="project-content">
-                            <h3>Voice-to-Text Semantic Summary Service</h3>
-                            <p>End-to-end audio transcription and summarization pipeline. Achieved 95% transcription accuracy across 12 languages with automated insight generation.</p>
-                            <div class="project-tech">
-                                <span class="tech-tag">Whisper</span>
-                                <span class="tech-tag">LLM</span>
-                                <span class="tech-tag">Audio Processing</span>
-                                <span class="tech-tag">FastAPI</span>
-                            </div>
-                            <a href="https://github.com/JhaswinArjunSuresh?tab=repositories" class="project-link">View on GitHub →</a>
-                        </div>
-                    </div>
-
-                    <div class="project-card">
-                        <div class="project-content">
-                            <h3>Financial News Sentiment API</h3>
-                            <p>Specialized sentiment analysis for financial articles. Achieved 91% accuracy in market sentiment prediction, deployed for 5+ hedge funds.</p>
-                            <div class="project-tech">
-                                <span class="tech-tag">finBERT</span>
-                                <span class="tech-tag">Transformers</span>
-                                <span class="tech-tag">FastAPI</span>
-                            </div>
-                            <a href="https://github.com/JhaswinArjunSuresh?tab=repositories" class="project-link">View on GitHub →</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="experience">
-            <h2 class="section-title">Work Experience</h2>
+        <section id="experience" class="reveal">
+            <h2 class="section-title">Work Experience [cite: 31]</h2>
             <div class="timeline">
-                <div class="exp-item" id="exp-1">
+                
+                <div class="exp-item reveal">
                     <div class="exp-head">
                         <div>
-                            <h3 style="margin:0">AI Engineer</h3>
-                            <div class="company">Flint International IT Services — Dubai, UAE</div>
+                            <h3 style="margin:0; font-size: 18px; color: var(--text-main);">AI Engineer / AI Analyst [cite: 32]</h3>
+                            <div class="company">Emirates Printing Press, Dubai, UAE </div>
                         </div>
-                        <div class="date">September 2025 – Present</div>
+                        <div class="date">Dec 2025 – Present </div>
                     </div>
                     <ul>
-                        <li>Will work on agentic AI frameworks and backend MLOps systems in the insurance domain.</li>
-                        <li>Will lead development of agentic AI workflows (LangGraph → OpenAI Realtime → Assistants) and optimize deployments using Claude.</li>
-                        <li>Focus on building robust MLOps pipelines and backend architectures for scalable AI agent deployment and automation.</li>
+                        <li>Working on Gemini integration and MLOps systems for language translation[cite: 34].</li>
+                        <li>Using RAG pipelines with Vector database (chroma db) for gemini integration[cite: 35].</li>
+                        <li>Exploring CLARA framework for project advancement[cite: 36].</li>
                     </ul>
                 </div>
 
-                <div class="exp-item" id="exp-2">
+                <div class="exp-item reveal">
                     <div class="exp-head">
                         <div>
-                            <h3 style="margin:0">AI Integration Engineer</h3>
-                            <div class="company">Voizzit Information Technology LLC — Dubai, UAE</div>
+                            <h3 style="margin:0; font-size: 18px; color: var(--text-main);">AI Engineer [cite: 37]</h3>
+                            <div class="company">Flint International IT Services, Dubai, UAE [cite: 38]</div>
                         </div>
-                        <div class="date">April 2025 – October 2025</div>
+                        <div class="date">Sept 2025 – Nov 2025 [cite: 38]</div>
                     </div>
                     <ul>
-                        <li>Spearheaded iterative development of agentic AI workflows, starting with LangGraph experimentation and transitioning through OpenAI real-time APIs and Claude.</li>
-                        <li>Developed autonomous flight booking agents handling thousands of monthly transactions using FastAPI, LangGraph, and OpenAI/Claude backends.</li>
-                        <li>Fine-tuned inference performance across Claude, GPT-4, and LLaMA — major reduction in response latency.</li>
-                        <li>Built multilingual speech-to-text pipelines (Whisper.cpp + FastAPI) with 55–75%+ transcription accuracy across languages.</li>
+                        <li>Worked on agentic AI frameworks and backend MLOps systems in the insurance domain[cite: 39].</li>
+                        <li>Led agentic AI workflows spanning LangGraph, OpenAI Realtime APIs, and deployments optimized with Claude[cite: 40].</li>
+                        <li>Focused on building robust MLOps pipelines and backend architectures for scalable deployment[cite: 41].</li>
                     </ul>
                 </div>
 
-                <div class="exp-item" id="exp-3">
+                <div class="exp-item reveal">
                     <div class="exp-head">
                         <div>
-                            <h3 style="margin:0">AI/ML Engineer</h3>
-                            <div class="company">Genworx.ai — Chennai, India</div>
+                            <h3 style="margin:0; font-size: 18px; color: var(--text-main);">AI Integration Engineer [cite: 42]</h3>
+                            <div class="company">Voizzit Information Technology LLC, Dubai, UAE [cite: 43]</div>
                         </div>
-                        <div class="date">January 2025 – February 2025</div>
+                        <div class="date">April 2025 – Oct 2025 [cite: 43]</div>
                     </div>
                     <ul>
-                        <li>Developed LLM agent using RAG (Pinecone + LoRA) for auto-generating Terraform unit tests.</li>
-                        <li>Automated multi-cloud deployments across AWS &amp; Azure using Terraform and CI/CD.</li>
-                        <li>Created Power BI dashboards tracking deployment efficiency.</li>
+                        <li>Spearheaded iterative development of agentic AI workflows with LangGraph and OpenAI APIs[cite: 44].</li>
+                        <li>Deployed autonomous flight booking agents handling thousands of monthly transactions[cite: 45].</li>
+                        <li>Fine-tuned inference performance across Claude, GPT-4, and LLaMA, achieving major latency reductions[cite: 46].</li>
+                        <li>Architected scalable AI infrastructure using Docker, Docker Compose, and Kubernetes[cite: 48].</li>
                     </ul>
                 </div>
 
-                <div class="exp-item" id="exp-4">
+                <div class="exp-item reveal">
                     <div class="exp-head">
                         <div>
-                            <h3 style="margin:0">AI/ML Engineer</h3>
-                            <div class="company">CitiusTech Healthcare Technologies — Chennai, India</div>
+                            <h3 style="margin:0; font-size: 18px; color: var(--text-main);">AI/ML Engineer [cite: 50]</h3>
+                            <div class="company">Genworx.ai, Chennai, India [cite: 51]</div>
                         </div>
-                        <div class="date">June 2024 – October 2024</div>
+                        <div class="date">Jan 2025 – Feb 2025 [cite: 51]</div>
                     </div>
                     <ul>
-                        <li>Led MLOps initiative packaging ML models for hybrid-cloud deployment across 50+ healthcare facilities.</li>
-                        <li>Designed HIPAA-compliant RAG system using LangChain, JWT/OAuth2, and AWS Bedrock serving 25K+ healthcare professionals.</li>
-                        <li>Built automated model packaging pipelines reducing deployment time from weeks to hours.</li>
+                        <li>Developed LLM agent using RAG (Pinecone + LORA) for auto-generating Terraform unit tests[cite: 53].</li>
+                        <li>Automated multi-cloud deployments across AWS and Azure using Terraform and CI/CD pipelines[cite: 54].</li>
                     </ul>
                 </div>
 
-                <div class="exp-item" id="exp-5">
+                <div class="exp-item reveal">
                     <div class="exp-head">
                         <div>
-                            <h3 style="margin:0">AI/ML Engineer</h3>
-                            <div class="company">Acubetech Solutions — Bangalore, India</div>
+                            <h3 style="margin:0; font-size: 18px; color: var(--text-main);">AI/ML Engineer [cite: 56]</h3>
+                            <div class="company">CitiusTech Healthcare Technologies, Chennai, India [cite: 57]</div>
                         </div>
-                        <div class="date">August 2023 – June 2024</div>
+                        <div class="date">June 2024 – Oct 2024 [cite: 57]</div>
                     </div>
                     <ul>
-                        <li>Deployed conversational AI chatbot using LangChain and Pinecone RAG on AWS serving daily active users with sub-500ms latency.</li>
-                        <li>Developed real-time proctoring solution with PyTorch and computer vision.</li>
-                        <li>Built LLM-enhanced evaluation engine automating grading processes.</li>
+                        <li>Led MLOps packaging of ML models for hybrid-cloud deployment across 50+ healthcare facilities[cite: 58].</li>
+                        <li>Designed HIPAA-compliant RAG system using LangChain and AWS Bedrock, serving 25K+ professionals[cite: 59].</li>
                     </ul>
                 </div>
 
-                <div class="exp-item" id="exp-6">
+                <div class="exp-item reveal">
                     <div class="exp-head">
                         <div>
-                            <h3 style="margin:0">AI/ML Engineer</h3>
-                            <div class="company">TiliconVeli Tech Park — Tamil Nadu, India</div>
+                            <h3 style="margin:0; font-size: 18px; color: var(--text-main);">AI/ML Engineer [cite: 62]</h3>
+                            <div class="company">Acubetech Solutions, Bangalore, India [cite: 63]</div>
                         </div>
-                        <div class="date">June 2023 – July 2023</div>
+                        <div class="date">Aug 2023 – June 2024 [cite: 63]</div>
                     </div>
                     <ul>
-                        <li>Designed Neo4j-based Knowledge Graph enabling semantic search across 1M+ business entities.</li>
-                        <li>Developed resume parsing system using LangChain and OpenAI LLMs for candidate-job matching.</li>
+                        <li>Deployed conversational AI chatbot using LangChain and Pinecone RAG on AWS[cite: 64].</li>
+                        <li>Developed real-time proctoring solution with PyTorch and computer vision[cite: 66].</li>
+                    </ul>
+                </div>
+                
+                <div class="exp-item reveal">
+                    <div class="exp-head">
+                        <div>
+                            <h3 style="margin:0; font-size: 18px; color: var(--text-main);">AI/ML Engineer [cite: 69]</h3>
+                            <div class="company">TiliconVeli Tech Park, Tamil Nadu, India [cite: 70]</div>
+                        </div>
+                        <div class="date">June 2023 – July 2023 [cite: 70]</div>
+                    </div>
+                    <ul>
+                        <li>Designed Neo4j-based Knowledge Graph for semantic search across 1M+ entities[cite: 72].</li>
+                        <li>Developed resume parsing system using LangChain and OpenAI[cite: 72].</li>
                     </ul>
                 </div>
 
-                <div class="exp-item" id="exp-7">
+                <div class="exp-item reveal">
                     <div class="exp-head">
                         <div>
-                            <h3 style="margin:0">AI/ML Engineer</h3>
-                            <div class="company">Amshuhu iTech Solution — Chennai, India</div>
+                            <h3 style="margin:0; font-size: 18px; color: var(--text-main);">AI/ML Engineer [cite: 74]</h3>
+                            <div class="company">Amshuhu iTech Solution, Chennai, India [cite: 75]</div>
                         </div>
-                        <div class="date">November 2021 – May 2023</div>
+                        <div class="date">Nov 2021 – May 2023 [cite: 75]</div>
                     </div>
                     <ul>
-                        <li>Led development of AI-powered customer segmentation system for a major US petroleum company.</li>
-                        <li>Built time-series forecasting models using ARIMA and Prophet improving sales prediction accuracy by 40%.</li>
-                        <li>Engineered computer vision system for sales automation.</li>
+                        <li>Built time-series forecasting models using ARIMA and Facebook Prophet, improving accuracy by 40%[cite: 77].</li>
+                        <li>Engineered computer vision system for sales automation[cite: 79].</li>
                     </ul>
                 </div>
 
-                <div class="exp-item" id="exp-8">
+                <div class="exp-item reveal">
                     <div class="exp-head">
                         <div>
-                            <h3 style="margin:0">AI/ML Engineer &amp; Python Backend Developer</h3>
-                            <div class="company">Freelance — Chennai, India</div>
+                            <h3 style="margin:0; font-size: 18px; color: var(--text-main);">AI/ML Engineer & Backend Dev [cite: 81]</h3>
+                            <div class="company">Freelance, Chennai, India [cite: 82]</div>
                         </div>
-                        <div class="date">April 2020 – October 2021</div>
+                        <div class="date">April 2020 – Oct 2021 [cite: 82]</div>
                     </div>
                     <ul>
-                        <li>Developed scalable backend systems using Django, Flask, and FastAPI with integrated ML models.</li>
-                        <li>Built ETL pipelines processing datasets with 10M+ records for automobile and healthcare analytics.</li>
+                        <li>Developed scalable backend systems using Django, Flask, and FastAPI[cite: 83].</li>
+                        <li>Built ETL pipelines processing 10M+ records for analytics[cite: 84].</li>
                     </ul>
                 </div>
 
-                <div class="exp-item" id="exp-9">
+                <div class="exp-item reveal">
                     <div class="exp-head">
                         <div>
-                            <h3 style="margin:0">Data Scientist &amp; Full Stack Developer</h3>
-                            <div class="company">GMRAF — Chennai, India</div>
+                            <h3 style="margin:0; font-size: 18px; color: var(--text-main);">Data Scientist & Full Stack Dev [cite: 85]</h3>
+                            <div class="company">GMRAF, Chennai, India [cite: 86]</div>
                         </div>
-                        <div class="date">November 2016 – March 2020</div>
+                        <div class="date">Nov 2016 – March 2020 [cite: 86]</div>
                     </div>
                     <ul>
-                        <li>Delivered analytics dashboards and full-stack apps integrating AI insights for real-time decision-making.</li>
-                        <li>Processed datasets containing 5M+ records to generate actionable business insights.</li>
+                        <li>Delivered analytics dashboards integrating AI insights into Django applications[cite: 88].</li>
+                        <li>Processed datasets of 5M+ records to generate business insights[cite: 89].</li>
                     </ul>
                 </div>
+
             </div>
         </section>
 
-        <section id="contact">
+        <section id="contact" class="reveal">
             <h2 class="section-title">Let's Connect</h2>
             <div class="contact-grid">
                 <div class="contact-card">
-                    <p style="margin:0 0 8px"><strong>Email</strong></p>
-                    <a href="mailto:jhaswin.arjun.suresh@gmail.com">jhaswin.arjun.suresh@gmail.com</a>
+                    <h4>Email [cite: 4]</h4>
+                    <a href="mailto:jhaswin.arjun.suresh@gmail.com">Contact via Email</a>
                 </div>
                 <div class="contact-card">
-                    <p style="margin:0 0 8px"><strong>LinkedIn</strong></p>
-                    <a href="https://www.linkedin.com/in/jhaswin-arjun-suresh-ba4429269" target="_blank">linkedin.com/in/jhaswin-arjun-suresh-ba4429269</a>
+                    <h4>LinkedIn [cite: 6]</h4>
+                    <a href="https://www.linkedin.com/in/jhaswin-arjun-suresh-ba4429269" target="_blank">Connect on LinkedIn</a>
                 </div>
                 <div class="contact-card">
-                    <p style="margin:0 0 8px"><strong>Phone (UAE)</strong></p>
-                    <a href="tel:+971585679639">+971 58 567 9639</a>
+                    <h4>Phone & WhatsApp [cite: 5]</h4>
+                    <a href="tel:+971585679639">+971 58 567 9639 (UAE)</a><br>
+                    <a href="tel:+918667820179" style="font-size: 13px; font-weight: 400;">+91 86678 20179 (WA)</a>
                 </div>
             </div>
         </section>
 
         <footer>
-            <p>&copy; 2025 Jhaswin Arjun Suresh &middot; Built with a focus on production AI systems.</p>
+            <p>&copy; 2026 Jhaswin Arjun Suresh &middot; Built with a focus on production AI systems.</p>
         </footer>
     </main>
 
     <script>
-        // Smooth scroll
-        document.querySelectorAll('a[href^="#"]').forEach(a=>{
-            a.addEventListener('click',e=>{
+        // Smooth scrolling & Progress Bar
+        const progressBar = document.getElementById('progress-bar');
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            progressBar.style.width = (winScroll / height) * 100 + '%';
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                const t=document.querySelector(a.getAttribute('href'));
-                if(t) t.scrollIntoView({behavior:'smooth',block:'start'});
+                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
             });
         });
 
-        // Typing effect
-        const phrases = ["LLMs · MLOps · Cloud AI · Scalable Systems","LangChain · LangGraph · OpenAI · Claude","Agentic AI · Production ML · MLOps"];
-        let idx = 0; let pos = 0; let forward = true; const typedEl = document.getElementById('typed');
-        function typeLoop(){
-            const current = phrases[idx];
-            if(forward){
-                pos++;
-                typedEl.textContent = current.slice(0,pos);
-                if(pos === current.length){forward=false;setTimeout(typeLoop,1000);return}
+        // Typing Effect [cite: 29, 30]
+        const phrases = ["LLMs · MLOps · Cloud AI", "Agentic AI · RAG Systems", "FastAPI · AWS · Docker"];
+        let i = 0, j = 0, isDeleting = false;
+        const typedEl = document.getElementById('typed');
+        
+        function type() {
+            const current = phrases[i];
+            if(isDeleting) {
+                typedEl.textContent = current.substring(0, j-1);
+                j--;
             } else {
-                pos--;
-                typedEl.textContent = current.slice(0,pos);
-                if(pos===0){forward=true; idx=(idx+1)%phrases.length; setTimeout(typeLoop,300);return}
+                typedEl.textContent = current.substring(0, j+1);
+                j++;
             }
-            setTimeout(typeLoop,50);
+            let speed = isDeleting ? 40 : 100;
+            if(!isDeleting && j === current.length) { speed = 2000; isDeleting = true; }
+            else if(isDeleting && j === 0) { isDeleting = false; i = (i + 1) % phrases.length; speed = 500; }
+            setTimeout(type, speed);
         }
-        typeLoop();
+        type();
 
-        // Animate progress bars on scroll
-        const bars = document.querySelectorAll('.bar > span');
-        function animateBars(){
-            bars.forEach(b=>{
-                const rect = b.getBoundingClientRect();
-                if(rect.top < window.innerHeight - 80){
-                    b.style.width = b.getAttribute('data-width');
+        // Reveal animations on scroll
+        const reveals = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    // Animate skill bars if inside a reveal block
+                    const bars = entry.target.querySelectorAll('.bar-fill');
+                    bars.forEach(b => { b.style.width = b.getAttribute('data-width'); });
                 }
             });
-        }
-        animateBars();
-        window.addEventListener('scroll',animateBars);
+        }, { threshold: 0.1 });
+        reveals.forEach(r => revealObserver.observe(r));
 
-        // Reveal experience items on scroll
-        const items = document.querySelectorAll('.exp-item');
-        const observer = new IntersectionObserver((entries)=>{
-            entries.forEach(entry=>{
-                if(entry.isIntersecting){entry.target.classList.add('show');}
+        // Interactive Mouse Glow
+        const glow = document.getElementById('glow');
+        document.addEventListener('mousemove', (e) => {
+            glow.style.left = e.clientX + 'px';
+            glow.style.top = e.clientY + 'px';
+        });
+
+        // 3D Tilt Effect for specific cards
+        const tiltCards = document.querySelectorAll('.tilt-effect, #tilt-card');
+        tiltCards.forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -5;
+                const rotateY = ((x - centerX) / centerX) * 5;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
             });
-        },{threshold:0.15});
-        items.forEach(i=>observer.observe(i));
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+            });
+        });
+
+        // Theme Toggle
+        const themeBtn = document.getElementById('theme-btn');
+        let isDark = false;
+        themeBtn.addEventListener('click', () => {
+            isDark = !isDark;
+            if(isDark) {
+                document.body.setAttribute('data-theme', 'dark');
+                themeBtn.textContent = '☀️ Light';
+            } else {
+                document.body.removeAttribute('data-theme');
+                themeBtn.textContent = '🌙 Dark';
+            }
+        });
     </script>
 </body>
 </html>
